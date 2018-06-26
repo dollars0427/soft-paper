@@ -1,18 +1,26 @@
 const Paper = {
   split(container, target){
-    const paper = container;
-    const paperContent = paper.innerHTML;
-    const paperHeight = paper.scrollHeight;
-
-    if(paper.scrollHeight > paper.innerHeight){
-      console.log('Overflowed');
+    const paper = document.querySelector(container);
+    const paperContent = document.querySelector('.paper-content');
+    const nodeList = Array.from(paperContent.childNodes);
+    this._splitContent(paper, nodeList);
+  },
+  _splitContent(paper, nodeList){
+    if(!paper.scrollHeight > paper.offsetHeight){
+      for(let i = 0; i < nodeList.length; i++){
+        const node = nodeList.pop();
+        console.log(node);
+        paper.appendChild(node);
+      }
+    }else{
+      const newPage = paper.cloneNode(false);
+      this._splitContent(newPage, nodeList);
     }
-    //const paperSize = paperContent.length / paperHeight;
   }
 }
 
 if (typeof window !== 'undefined') {
 	window.SoftPaper = Paper;
 }else{
-  export default Paper;
+  module.exports = Paper;
 }
