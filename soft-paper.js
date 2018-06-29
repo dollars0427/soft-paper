@@ -2,21 +2,39 @@ const Paper = {
   split(container, target){
     const paper = document.querySelector(container);
     const paperContent = document.querySelector('.paper-content');
-    const nodeList = Array.from(paperContent.childNodes);
-    this._splitContent(paper, nodeList);
+    const contentList = paperContent.cloneNode(true).childNodes;
+    paperContent.innerHTML = ''; //Clear Page Content
+    this._splitContent(paper, contentList);
   },
   _splitContent(paper, nodeList){
-    if(!paper.scrollHeight > paper.offsetHeight){
-      for(let i = 0; i < nodeList.length; i++){
-        const node = nodeList.pop();
-        console.log(node);
-        paper.appendChild(node);
+    nodeList.forEach((node) => {
+      if(node.textContent){
+        const texts = node.textContent.split('');
+        this._splitText(paper, texts);
       }
-    }else{
-      const newPage = paper.cloneNode(false);
-      this._splitContent(newPage, nodeList);
+    });
+  },
+  _splitText(paper, texts){
+    const fullTexts = texts.slice(0);
+    for(let i = 0; i < texts.length; i++){
+      if(!this._isOverflowed(paper)){
+        const text = fullTexts.shift();
+        paper.innerHTML += text;
+      }else{
+        const newPage = paper.cloneNode(false);
+        paper.parentNode.appendChild(newPage);
+        this._splitText(newPage, fullTexts);
+        break;
+      }
     }
-  }
+  },
+  _isOverflowed(paper){
+    let isOverflow = false;
+    if(paper.scrollHeight > paper.offsetHeight){
+      isOverflow = true;
+    }
+    return isOverflow;
+  },
 }
 
 if (typeof window !== 'undefined') {
