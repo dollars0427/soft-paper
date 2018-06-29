@@ -17,10 +17,13 @@ const Paper = {
   _splitText(paper, texts){
     const fullTexts = texts.slice(0);
     for(let i = 0; i < texts.length; i++){
-      if(!this._isOverflowed(paper)){
-        const text = fullTexts.shift();
-        paper.innerHTML += text;
-      }else{
+      const text = fullTexts.shift();
+      paper.innerHTML += text;
+
+      //If overflowed, add text back and put it to next page
+      if(this._isOverflowed(paper)){
+        paper.innerHTML  = paper.innerHTML.slice(0, -1);
+        fullTexts.unshift(text);
         const newPage = paper.cloneNode(false);
         paper.parentNode.appendChild(newPage);
         this._splitText(newPage, fullTexts);
@@ -30,7 +33,7 @@ const Paper = {
   },
   _isOverflowed(paper){
     let isOverflow = false;
-    if(paper.scrollHeight > paper.offsetHeight){
+    if(paper.scrollHeight > paper.clientHeight){
       isOverflow = true;
     }
     return isOverflow;
