@@ -60,6 +60,6 @@ const Paper = {
 
 if (typeof window !== 'undefined') {
 	window.SoftPaper = Paper;
-}else{
-  module.exports = Paper;
 }
+
+module.exports = Paper;
