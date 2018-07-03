@@ -32,9 +32,9 @@ const SoftPaper = require('./soft-paper');
 SoftPaper.split('.paper-content');
 ```
 
-##Methods
+## Methods
 
-###split(container)
+### split(container)
 
 Function for split content with this parent.
 
@@ -42,5 +42,5 @@ Function for split content with this parent.
 SoftPaper.split('.paper-content');
 ```
 
-##Limit
+## Limit
 Currently, this library do not use binary search (Maybe will be slow) , and will copy the content with their parent.
