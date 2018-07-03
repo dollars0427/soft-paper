@@ -25,7 +25,12 @@ Than call SoftPaper split function at Javascript:
 window.SoftPaper.split('.paper-content');
 ```
 ### JS File
-Just require it.
+Install it by npm:
+
+```bash
+npm install soft-paper
+```
+And just require it:
 
 ```js
 const SoftPaper = require('./soft-paper');

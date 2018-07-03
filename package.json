@@ -1,0 +1,14 @@
+{
+  "name": "soft-paper",
+  "version": "0.0.1",
+  "description": "A CSS3 Regions like layout Pure Javascript library",
+  "author": "Mr.Twister <sardo.ip@sardo.work>",
+  "main": "soft-paper.js",
+  "private": false,
+  "license": "MIT",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}
