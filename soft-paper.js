@@ -1,46 +1,50 @@
-# soft-paper
-A CSS3 Regions like layout Pure Javascript library
+const Paper = {
+  split(content){
+    const page = document.querySelector(content);
+    const contentList = page.cloneNode(true).childNodes;
+    page.innerHTML = ''; //Clear Page Content
+    this._splitContent(page, contentList);
+  },
+  _splitContent(page, nodeList){
+    nodeList.forEach((node) => {
+      if(node.textContent){
+        const texts = node.textContent.split('');
+        this._splitText(page, texts);
+      }
+    });
+  },
+  _splitText(page, texts){
+    const pageParent = page.parentNode;
+    const fullTexts = texts.slice(0);
+    for(let i = 0; i < texts.length; i++){
+      const text = fullTexts.shift();
+      page.innerHTML += text;
 
-This library is for create CSS3 Regions like layout dynamically, you would not need to prepare many container to store the content.
-It will not support IE 9 and other old browser.
+      //If overflowed, add text back and put it to next page
+      if(this._isOverflowed(pageParent)){
+        page.innerHTML = page.innerHTML.slice(0, -1);
+        fullTexts.unshift(text);
+        const newParent = pageParent.cloneNode(false);
+        const newPage = page.cloneNode(false);
+        pageParent.parentNode.appendChild(newParent);
+        newParent.appendChild(newPage);
+        this._splitText(newPage, fullTexts);
+        break;
+      }
+    }
+  },
+  _isOverflowed(page){
+    let isOverflow = false;
+    if(page.scrollHeight > page.clientHeight){
+      isOverflow = true;
+    }
+    return isOverflow;
+  },
+}
 
-## Usage
+if (typeof window !== 'undefined') {
+	window.SoftPaper = Paper;
+}else{
+  module.exports = Paper;
+}
 
-### Browser
-Firstly, require the Javascript file at your html file:
-```html
-<script src="soft-paper.js"></script>
-```
-Create your html markup like this:
-```html
-<div class="paper">
-  <div class="paper-content">
-  Some very very long content
-  </div>
- </div>
-```
-
-Than call SoftPaper split function at Javascript:
-```js
-window.SoftPaper.split('.paper-content');
-```
-### JS File
-Just require it.
-
-```js
-const SoftPaper = require('./soft-paper');
-SoftPaper.split('.paper-content');
-```
-
-## Methods
-
-### split(container)
-
-Function for split content with this parent.
-
-```js
-SoftPaper.split('.paper-content');
-```
-
-## Limit
-Currently, this library do not use binary search (Maybe will be slow) , and will copy the content with their parent.
