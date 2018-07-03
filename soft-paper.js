@@ -1,39 +1,42 @@
 const Paper = {
-  split(container, target){
-    const paper = document.querySelector(container);
-    const paperContent = document.querySelector('.paper-content');
-    const contentList = paperContent.cloneNode(true).childNodes;
-    paperContent.innerHTML = ''; //Clear Page Content
-    this._splitContent(paper, contentList);
+  split(container, content){
+    const page = document.querySelector(container);
+    let pageContent = document.querySelector(content);
+    const contentList = pageContent.cloneNode(true).childNodes;
+    pageContent.innerHTML = ''; //Clear Page Content
+
+    this._splitContent(page, pageContent, contentList);
   },
-  _splitContent(paper, nodeList){
+  _splitContent(page, content, nodeList){
     nodeList.forEach((node) => {
       if(node.textContent){
         const texts = node.textContent.split('');
-        this._splitText(paper, texts);
+        this._splitText(page, content, texts);
       }
     });
   },
-  _splitText(paper, texts){
+  _splitText(page, content, texts){
     const fullTexts = texts.slice(0);
     for(let i = 0; i < texts.length; i++){
       const text = fullTexts.shift();
-      paper.innerHTML += text;
+      content.innerHTML += text;
 
       //If overflowed, add text back and put it to next page
-      if(this._isOverflowed(paper)){
-        paper.innerHTML  = paper.innerHTML.slice(0, -1);
+      if(this._isOverflowed(page)){
+        content.innerHTML = content.innerHTML.slice(0, -1);
         fullTexts.unshift(text);
-        const newPage = paper.cloneNode(false);
-        paper.parentNode.appendChild(newPage);
-        this._splitText(newPage, fullTexts);
+        const newPage = page.cloneNode(false);
+        const newPageContent = content.cloneNode(false);
+        page.parentNode.appendChild(newPage);
+        newPage.appendChild(newPageContent);
+        this._splitText(newPage, newPageContent, fullTexts);
         break;
       }
     }
   },
-  _isOverflowed(paper){
+  _isOverflowed(page){
     let isOverflow = false;
-    if(paper.scrollHeight > paper.clientHeight){
+    if(page.scrollHeight > page.clientHeight){
       isOverflow = true;
     }
     return isOverflow;
