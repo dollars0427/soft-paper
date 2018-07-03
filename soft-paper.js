@@ -1,35 +1,34 @@
 const Paper = {
-  split(container, content){
-    const page = document.querySelector(container);
-    let pageContent = document.querySelector(content);
-    const contentList = pageContent.cloneNode(true).childNodes;
-    pageContent.innerHTML = ''; //Clear Page Content
-
-    this._splitContent(page, pageContent, contentList);
+  split(content){
+    const page = document.querySelector(content);
+    const contentList = page.cloneNode(true).childNodes;
+    page.innerHTML = ''; //Clear Page Content
+    this._splitContent(page, contentList);
   },
-  _splitContent(page, content, nodeList){
+  _splitContent(page, nodeList){
     nodeList.forEach((node) => {
       if(node.textContent){
         const texts = node.textContent.split('');
-        this._splitText(page, content, texts);
+        this._splitText(page, texts);
       }
     });
   },
-  _splitText(page, content, texts){
+  _splitText(page, texts){
+    const pageParent = page.parentNode;
     const fullTexts = texts.slice(0);
     for(let i = 0; i < texts.length; i++){
       const text = fullTexts.shift();
-      content.innerHTML += text;
+      page.innerHTML += text;
 
       //If overflowed, add text back and put it to next page
-      if(this._isOverflowed(page)){
-        content.innerHTML = content.innerHTML.slice(0, -1);
+      if(this._isOverflowed(pageParent)){
+        page.innerHTML = page.innerHTML.slice(0, -1);
         fullTexts.unshift(text);
+        const newParent = pageParent.cloneNode(false);
         const newPage = page.cloneNode(false);
-        const newPageContent = content.cloneNode(false);
-        page.parentNode.appendChild(newPage);
-        newPage.appendChild(newPageContent);
-        this._splitText(newPage, newPageContent, fullTexts);
+        pageParent.parentNode.appendChild(newParent);
+        newParent.appendChild(newPage);
+        this._splitText(newPage, fullTexts);
         break;
       }
     }
